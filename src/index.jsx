@@ -5,16 +5,20 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { LoggedIn } from "./pages/LoggedIn";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { theme } from "./global-styles/theme";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Switch>
-        <Route path="/" exact component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/in" component={LoggedIn} />
-      </Switch>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Switch>
+          <Route path="/" exact component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/in" component={LoggedIn} />
+        </Switch>
+      </Router>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

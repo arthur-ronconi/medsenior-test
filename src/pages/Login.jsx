@@ -1,12 +1,16 @@
+import { useEffect, useState } from "react";
 import {
   Button,
   Grid,
   TextField,
   makeStyles,
   Container,
+  Typography,
+  InputAdornment,
+  Checkbox,
 } from "@material-ui/core";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import "./styles/Login.scss";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,34 +20,93 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
-  inputFields: {
-    borderRadius: "0",
-    "::before": {
-      border: "none",
-    },
+  inputFields: {},
+  logo: {
+    width: "100%",
+    paddingBottom: "32px",
+  },
+  button: {
+    marginTop: "32px",
   },
 }));
 
 export const Login = () => {
   const classes = useStyles();
+  const [checked, setChecked] = useState(false);
+  const [inputType, setInputType] = useState("password");
+  useEffect(() => {
+    if (checked) {
+      setInputType("text");
+    } else {
+      setInputType("password");
+    }
+  }, [checked]);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
   return (
-    <Container className={classes.root}>
+    <Container className={classes.root} maxWidth="xs">
       <Grid container direction="column" spacing={2}>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          align="center"
+          item
+          xs={12}
+        >
+          <Grid item xs={6}>
+            <img
+              src="/img/medsenior-logo.png"
+              alt="MedSênior"
+              className={classes.logo}
+            />
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h5" align="center" color="primary">
+            Entrar
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField id="email" label="Email" variant="filled" fullWidth />
+        </Grid>
         <Grid item xs={12}>
           <TextField
-            id="email"
-            label="Email"
+            id="password"
+            label="Senha"
             variant="filled"
+            type={inputType}
             fullWidth
-            className={classes.inputFields}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    icon={<Visibility />}
+                    checkedIcon={<VisibilityOff />}
+                    color="default"
+                    inputProps={{ "aria-label": "Toggle visibility" }}
+                  />
+                </InputAdornment>
+              ),
+            }}
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField id="password" label="Senha" variant="filled" fullWidth />
-        </Grid>
-        <Grid item xs={12}>
           <small>
-            Não possui conta ainda? <Link to="/register">Registre-se aqui</Link>
+            Não possui conta ainda?{" "}
+            <Link
+              to="/register"
+              style={{
+                color: "#176831",
+                textDecoration: "none",
+              }}
+            >
+              Registre-se aqui
+            </Link>
           </small>
         </Grid>
 
@@ -56,7 +119,13 @@ export const Login = () => {
           xs={12}
         >
           <Grid item xs={6}>
-            <Button variant="contained" color="primary" size="large" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              fullWidth
+              className={classes.button}
+            >
               Entrar
             </Button>
           </Grid>
