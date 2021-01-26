@@ -11,6 +11,8 @@ import {
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import { theme } from "../global-styles/theme";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +47,12 @@ export const Login = () => {
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
+
+  const history = useHistory();
+  const Login = () => {
+    history.push("/in");
+  };
+
   return (
     <Container className={classes.root} maxWidth="xs">
       <Grid container direction="column" spacing={2}>
@@ -65,7 +73,7 @@ export const Login = () => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h5" align="center" color="primary">
+          <Typography variant="h5" align="center" color="secondary">
             Entrar
           </Typography>
         </Grid>
@@ -101,7 +109,7 @@ export const Login = () => {
             <Link
               to="/register"
               style={{
-                color: "#176831",
+                color: theme.palette.secondary.main,
                 textDecoration: "none",
               }}
             >
@@ -125,6 +133,7 @@ export const Login = () => {
               size="large"
               fullWidth
               className={classes.button}
+              onClick={() => Login()}
             >
               Entrar
             </Button>
