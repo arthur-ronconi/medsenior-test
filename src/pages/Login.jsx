@@ -13,7 +13,9 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { theme } from "../global-styles/theme";
 import { useHistory } from "react-router-dom";
+import { loginSchema } from "../validations/LoginValidation";
 
+// STYLES
 const useStyles = makeStyles((theme) => ({
   root: {
     color: "#616161",
@@ -33,9 +35,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Login = () => {
-  const classes = useStyles();
+  // CHECKBOX STATE
   const [checked, setChecked] = useState(false);
+
+  // INPUT TYPE STATE
   const [inputType, setInputType] = useState("password");
+
+  // TOGGLE PASSWORD VISIBILITY
   useEffect(() => {
     if (checked) {
       setInputType("text");
@@ -44,14 +50,38 @@ export const Login = () => {
     }
   }, [checked]);
 
+  // CHECKBOX HANDLER
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
 
+  // ROUTER
   const history = useHistory();
-  const Login = () => {
-    history.push("/in");
+
+  // STYLES
+  const classes = useStyles();
+
+  // FORM INPUT VALUES
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [formIsValid, setFormIsValid] = useState();
+
+  const submitHandler = async () => {
+    let formData = {
+      email: email,
+      password: password,
+    };
+    const isValid = await loginSchema.isValid(formData);
+    setFormIsValid(isValid);
   };
+
+  useEffect(() => {
+    if (formIsValid) {
+      history.push("/in");
+    } else {
+      return;
+    }
+  }, [formIsValid]);
 
   return (
     <Container className={classes.root} maxWidth="xs">
@@ -77,8 +107,15 @@ export const Login = () => {
             Entrar
           </Typography>
         </Grid>
+
         <Grid item xs={12}>
-          <TextField id="email" label="Email" variant="filled" fullWidth />
+          <TextField
+            id="email"
+            label="Email"
+            variant="filled"
+            fullWidth
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -87,6 +124,7 @@ export const Login = () => {
             variant="filled"
             type={inputType}
             fullWidth
+            onChange={(e) => setPassword(e.target.value)}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -103,6 +141,11 @@ export const Login = () => {
             }}
           />
         </Grid>
+        {formIsValid === false && (
+          <Grid item xs={12}>
+            <small style={{ color: "red" }}>Email ou senha inválidos</small>
+          </Grid>
+        )}
         <Grid item xs={12}>
           <small>
             Não possui conta ainda?{" "}
@@ -133,7 +176,7 @@ export const Login = () => {
               size="large"
               fullWidth
               className={classes.button}
-              onClick={() => Login()}
+              onClick={() => submitHandler()}
             >
               Entrar
             </Button>
