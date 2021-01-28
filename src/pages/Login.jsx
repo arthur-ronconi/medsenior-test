@@ -65,6 +65,7 @@ export const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [formIsValid, setFormIsValid] = useState();
+  const [loginFail, setLoginFail] = useState(false);
 
   const submitHandler = async () => {
     let formData = {
@@ -73,15 +74,25 @@ export const Login = () => {
     };
     const isValid = await loginSchema.isValid(formData);
     setFormIsValid(isValid);
-  };
-
-  useEffect(() => {
-    if (formIsValid) {
-      history.push("/in");
-    } else {
-      return;
+    if (isValid) {
+      const response = await fetch("http://localhost:4000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application-json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+      const message = await response.json();
+      if (message.code === 200) {
+        history.push("/in");
+      } else if (message.code === 400) {
+        setLoginFail(true);
+      }
     }
-  }, [formIsValid]);
+  };
 
   return (
     <Container className={classes.root} maxWidth="xs">
@@ -107,6 +118,13 @@ export const Login = () => {
             Entrar
           </Typography>
         </Grid>
+        {loginFail && (
+          <Grid item xs={12}>
+            <Typography variant="h6" align="center" color="error">
+              Email ou senha inválidos
+            </Typography>
+          </Grid>
+        )}
 
         <Grid item xs={12}>
           <TextField

@@ -26,6 +26,29 @@ app.post("/users/register", (req, res) => {
   }
 });
 
+app.post("/login", (req, res) => {
+  const user = {
+    email: req.body.email,
+    password: req.body.password,
+  };
+  if (
+    users.some(
+      (user) =>
+        user.email === req.body.email && user.password === req.body.password
+    ) === true
+  ) {
+    res.json({
+      message: "logged in successfully",
+      code: 200,
+    });
+  } else {
+    res.json({
+      message: "email or password are incorrect",
+      code: 400,
+    });
+  }
+});
+
 const port = 4000;
 app.listen(port, () => {
   console.log(`server running on port ${port}`);
